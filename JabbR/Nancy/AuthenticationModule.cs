@@ -47,6 +47,30 @@ namespace JabbR.Nancy
                 return response;
             };
 
+
+            Post["/register"] = param =>
+            {
+                string name = Request.Form.user;
+                string password = Request.Form.password;
+
+                var response = Response.AsRedirect("/");
+
+                if (!String.IsNullOrEmpty(name) &&
+                   !String.IsNullOrEmpty(password))
+                {
+                    ChatUser user = membershipService.AddUser(name, password);
+                    string userToken = authService.GetAuthenticationToken(user);
+                    var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
+                    {
+                        Expires = DateTime.Now + TimeSpan.FromDays(30)
+                    };
+
+                    response.AddCookie(cookie);
+                }
+
+                return response;
+            };
+
             Post["/logout"] = _ =>
             {
                 var response = Response.AsJson(new { success = true });
