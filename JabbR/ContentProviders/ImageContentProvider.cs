@@ -26,6 +26,7 @@ namespace JabbR.ContentProviders
 
         public static bool IsValidImagePath(string path)
         {
+	        path = path.ToLower();
             return path.EndsWith(".png") ||
                    path.EndsWith(".bmp") ||
                    path.EndsWith(".jpg") ||
